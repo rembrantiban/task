@@ -5,6 +5,7 @@ import cors from 'cors';
 import connectDb from './config/ConnectDb.js';  
 import Authrouter from './routes/userRoutes.js';  
 import taskRouter from './routes/taskRoutes.js';
+import router  from './routes/createdTaskRoutes.js';
 
 const app = express();
 const Port = process.env.PORT || 5000;
@@ -29,6 +30,7 @@ app.use((req, res, next) => {
 
 app.use('/api/user', Authrouter);
 app.use('/api/task', taskRouter);
+app.use("/api/title", router)
 console.log('Task router mounted at /api/task');
 
 app.get('/', (req, res) => res.send("App is working"));
