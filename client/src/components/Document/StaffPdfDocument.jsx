@@ -1,74 +1,30 @@
-import React from 'react';
-import {
-  Document,
-  Page,
-  Text,
-  View,
-  StyleSheet,
-} from '@react-pdf/renderer';
+import React from "react";
+import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
 
 const styles = StyleSheet.create({
-  page: {
-    padding: 30,
-    fontSize: 10,
-  },
-  heading: {
-    fontSize: 14,
-    marginBottom: 10,
-    fontWeight: 'bold',
-  },
-  table: {
-    display: "table",
-    width: "auto",
-  },
-  row: {
-    flexDirection: "row",
-  },
-  header: {
-    backgroundColor: "#eee",
-    fontWeight: 'bold',
-  },
-  cell: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderStyle: "solid",
-    padding: 5,
-    width: "35%",
-      textAlign: "left", 
-  },
+  page: { padding: 30, fontSize: 12 },
+  title: { fontSize: 18, marginBottom: 15, fontWeight: "bold" },
+  section: { marginBottom: 10 },
+  label: { fontWeight: "bold" },
 });
 
-const AssignedTasksPdf = ({ tasks }) => {
-  const safeTasks = Array.isArray(tasks) ? tasks : [];
+const AssignedTasksPdf = ({ tasks }) => (
+  <Document>
+    <Page size="A4" style={styles.page}>
+      <Text style={styles.title}>Staff List</Text>
 
-  const safeText = (value, fallback = '') =>
-    typeof value === 'string' ? value.trim() : fallback;
-
-  return (
-    <Document>
-      <Page size="A4" style={styles.page}>
-        <Text style={styles.heading}>Assigned Tasks</Text>
-
-        <View style={styles.table}>
-          <View style={[styles.row, styles.header]}>
-            <Text style={styles.cell}>Name</Text>
-            <Text style={styles.cell}>Position</Text>
-            <Text style={styles.cell}>Status</Text>
-          </View>
-
-          {safeTasks.map((task, index) => (
-            <View key={task._id || index} style={styles.row}>
-              <Text style={styles.cell}>
-                {safeText(task.assign?.firstName) + ' ' + safeText(task.assign?.lastName)}
-              </Text>
-              <Text style={styles.cell}>{safeText(task.assign?.role, 'N/A')}</Text>
-              <Text style={styles.cell}>{safeText(task.status, 'N/A')}</Text>
-            </View>
-          ))}
+      {tasks.map((user, index) => (
+        <View key={user._id} style={styles.section}>
+          <Text>
+            <Text style={styles.label}>{index + 1}.</Text>{" "}
+            {user.firstName} {user.lastName} — {user.role}
+          </Text>
+          <Text>Email: {user.email}</Text>
+          <Text>Phone: {user.phone}</Text>
         </View>
-      </Page>
-    </Document>
-  );
-};
+      ))}
+    </Page>
+  </Document>
+);
 
 export default AssignedTasksPdf;

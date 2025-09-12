@@ -26,7 +26,19 @@ export const getTaskTitle = async (req, res) => {
      }
 }
 
+export const getTotaltask = async (req, res) => {
+    try{
+        const totalTask = await addTaskModel.countDocuments();
+        res.status(200).json({ success: true, totalTask })
+    }
+    catch(error){
+        console.log("Error while Fetching", error)
+        return res.status(500).json("Internal Server Error")
+    }
+}
+
 export default {
     createTaskTitle,
     getTaskTitle,
+    getTotaltask,
 }

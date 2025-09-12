@@ -9,6 +9,22 @@ import axios from "axios";
 const Dashboard = () => {
   const [users, setUser] = useState("0");
   const [tasks, setTasks] = useState("0");
+  const [totalTask, setTotalTask ] = useState("0");
+
+  useEffect(() =>  {
+  const fetchtotalTask = async () => {
+       try{
+          const response = await axios.get("http://localhost:5000/api/title/gettotaltask")  
+          setTotalTask(response.data.totalTask || "0");
+          console.log(response.data.totalTask); 
+     }
+     catch(error){
+        console.error("Error while Fetching tasks", error)
+     } 
+    };
+
+    fetchtotalTask();
+  }, [])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,7 +72,7 @@ const Dashboard = () => {
           transition={{ duration: 1 }}
         >
         <StatCard
-            name="No. Tasks"
+            name="No. Assign Tasks"
             icon={Layers}
             value={tasks}
             color="#ffffff"
@@ -70,9 +86,9 @@ const Dashboard = () => {
             background="linear-gradient(135deg, #10B981, #059669)" 
           />
           <StatCard
-            name="Projects"
+            name="No. Task"
             icon={BarChart2}
-            value={12}
+            value={totalTask}
             color="#ffffff"
             background="linear-gradient(135deg, #F59E0B, #D97706)" 
           />
