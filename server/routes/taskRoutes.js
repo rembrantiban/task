@@ -7,6 +7,7 @@ import {
   getUserAssignTask,
   updatedTask,
   getTotalTask,
+  updateProofUrl,
 } from '../controller/taskController.js';
 import {
        getCompletedTask,
@@ -18,6 +19,7 @@ import {
 }
 from '../controller/taskCardController.js';
 import requireAuth from '../middleware/Auth.js';
+import upload from '../middleware/multer.js';
 
 
 const taskRouter = express.Router();
@@ -39,5 +41,6 @@ taskRouter.get("/inprogress",  getInProgressTasks)
 taskRouter.get('/userpendingtasks', requireAuth , getUserPendingTasks);
 taskRouter.get('/userinprogress', requireAuth, getUserInProgressTasks);
 taskRouter.get('/usercompletedtasks', requireAuth, getUserCompletedTasks);
+taskRouter.put("updateproofimage", upload.single("proofImage"), updateProofUrl)
 
 export default taskRouter;

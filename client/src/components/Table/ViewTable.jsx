@@ -3,7 +3,7 @@ import Profile from "../../assets/profile.jpg";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { FaClockRotateLeft, FaClock } from "react-icons/fa6";
-import { CheckCircle2, Loader2, X } from "lucide-react"; // ✅ Added X for close
+import { CheckCircle2, Loader2, X } from "lucide-react"; 
 import DeleteModal from "../../Modal/deleteTaskModal.jsx";
 import ExportTasksPreview from "../Document/ExportTasksPreview.jsx";
 

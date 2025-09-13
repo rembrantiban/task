@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Eye, X } from "lucide-react";
+import { Eye, X, Upload } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const ToDoTable = () => {
   const [tasks, setTasks] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [file, setFile] = useState(null); // file state
+  const [uploading, setUploading] = useState(false); // loading state
 
   const userId = localStorage.getItem("userId");
 
@@ -50,6 +53,41 @@ const ToDoTable = () => {
     if (status === "Completed")
       return "bg-green-100 text-green-700 border border-green-300";
     return "bg-gray-100 text-gray-700 border border-gray-300";
+  };
+
+  // ✅ Handle proof file upload
+  const handleUpload = async () => {
+    if (!file || !selectedTask) return;
+
+    const formData = new FormData();
+    formData.append("proofImage", file);
+
+    try {
+      setUploading(true);
+      const res = await axios.put(
+        `http://localhost:5000/api/task/${selectedTask._id}/proof`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+          withCredentials: true,
+        }
+      );
+
+      // update UI with new proof image
+      setTasks((prev) =>
+        prev.map((t) =>
+          t._id === selectedTask._id
+            ? { ...t, proofImage: res.data.proofImage }
+            : t
+        )
+      );
+      setSelectedTask(res.data);
+      setFile(null); // clear file
+    } catch (err) {
+      console.error("Upload failed:", err);
+    } finally {
+      setUploading(false);
+    }
   };
 
   return (
@@ -118,6 +156,7 @@ const ToDoTable = () => {
         </table>
       </div>
 
+      {/* Modal */}
       <AnimatePresence>
         {isModalOpen && selectedTask && (
           <motion.div
@@ -132,18 +171,69 @@ const ToDoTable = () => {
               exit={{ scale: 0.9, opacity: 0 }}
               className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 relative"
             >
+              {/* Close button */}
               <button
                 onClick={() => setIsModalOpen(false)}
                 className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition"
               >
                 <X size={20} />
               </button>
+
+              {/* Task Info */}
               <h3 className="text-2xl font-bold text-gray-800 mb-4">
                 {selectedTask.title}
               </h3>
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-gray-600 leading-relaxed mb-4">
                 {selectedTask.description}
               </p>
+
+              {/* File Upload UI */}
+              <div className="border rounded-lg p-4 bg-gray-50">
+                <label className="block mb-2 font-medium text-gray-700">
+                  Upload Proof File
+                </label>
+                <input
+                  type="file"
+                  onChange={(e) => setFile(e.target.files[0])}
+                  className="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4
+                             file:rounded-full file:border-0 file:text-sm file:font-semibold
+                             file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                />
+
+                {/* Preview if image */}
+                {file && file.type.startsWith("image/") && (
+                  <img
+                    src={URL.createObjectURL(file)}
+                    alt="preview"
+                    className="mt-3 w-32 h-32 object-cover rounded-md border"
+                  />
+                )}
+
+                <button
+                  onClick={handleUpload}
+                  disabled={uploading || !file}
+                  className={`mt-4 w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-white ${
+                    uploading
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-green-600 hover:bg-green-500"
+                  }`}
+                >
+                  <Upload size={18} />
+                  {uploading ? "Uploading..." : "Upload Proof"}
+                </button>
+              </div>
+
+              {/* Show current proof image if exists */}
+              {selectedTask.proofImage && (
+                <div className="mt-4">
+                  <h4 className="font-semibold mb-2">Current Proof:</h4>
+                  <img
+                    src={selectedTask.proofImage}
+                    alt="proof"
+                    className="w-40 h-40 object-cover rounded-md border"
+                  />
+                </div>
+              )}
             </motion.div>
           </motion.div>
         )}

@@ -1,5 +1,5 @@
 import taskModel from "../models/taskModel.js";
-
+import cloudinary from "../config/cloudinary.js"
 
 export const createTask = async (req, res ) => {
      try{
@@ -167,10 +167,34 @@ export const getUserAssignTask = async (req, res) => {
             return res.status(500).json({ success: false, message: "Internal server error"});
          }
     }
-
    
+  export const updateProofUrl = async (req, res) => {
+        try{
+            const { id } = req.params;
+            let proofUrl = null;
 
-    
+            if(req.file){
+             const result = await cloudinary.uploader.upload(req.file.path, {
+                folder: "task_proof",
+             });
+
+             proofUrl = result.secure.url;
+            }
+            const updatedTask = await taskModel.findByIdAndUpdate(
+                id,
+                { proofImage: proofUrl },
+                {new: true}
+            );
+
+            res.status.json(200).json(updatedTask)
+        }
+        catch(error){
+            console.error("Error while updating proof image", error)
+            res.status(500).json({ message: "Failed to updated proof image"})
+        }
+
+  }
+ 
 
 export default{
   createTask,
@@ -180,4 +204,5 @@ export default{
   getUserAssignTask,
   updatedTask,
   getTotalTask,
+  updateProofUrl,
 };

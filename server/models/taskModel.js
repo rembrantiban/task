@@ -16,6 +16,9 @@ const taskSchema = new mongoose.Schema({
         default: 'Pending',
         required: true,
     },
+    proofUrl:{
+        type:String,
+    },
     assign: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
