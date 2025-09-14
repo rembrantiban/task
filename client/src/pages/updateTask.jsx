@@ -99,7 +99,6 @@ const UpdateTask = () => {
             Update Task
           </h2>
 
-          {/* Task Title */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Task Title
@@ -120,7 +119,6 @@ const UpdateTask = () => {
             </select>
           </div>
 
-          {/* Description */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Description
@@ -135,7 +133,6 @@ const UpdateTask = () => {
             ></textarea>
           </div>
 
-          {/* Assign To */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Assign To

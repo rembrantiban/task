@@ -41,6 +41,6 @@ taskRouter.get("/inprogress",  getInProgressTasks)
 taskRouter.get('/userpendingtasks', requireAuth , getUserPendingTasks);
 taskRouter.get('/userinprogress', requireAuth, getUserInProgressTasks);
 taskRouter.get('/usercompletedtasks', requireAuth, getUserCompletedTasks);
-taskRouter.put("updateproofimage", upload.single("proofImage"), updateProofUrl)
+taskRouter.put("/updateproofimage/:id", upload.single("proofImage"), updateProofUrl)
 
 export default taskRouter;

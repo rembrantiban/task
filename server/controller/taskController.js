@@ -33,7 +33,7 @@ export const createTask = async (req, res ) => {
     try {
         const tasks = await taskModel.find({})
             .populate('assign', 'firstName lastName email role image')
-            .select('title description assign status');
+            .select('title description assign status proofUrl');
         return res.status(200).json({
             success: true,
             tasks
@@ -169,31 +169,42 @@ export const getUserAssignTask = async (req, res) => {
     }
    
   export const updateProofUrl = async (req, res) => {
-        try{
-            const { id } = req.params;
-            let proofUrl = null;
+  try {
+    const { id } = req.params;
+    let proofUrl = null;
 
-            if(req.file){
-             const result = await cloudinary.uploader.upload(req.file.path, {
-                folder: "task_proof",
-             });
+    if (req.file) {
+      const result = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "task_proof" },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+        stream.end(req.file.buffer); 
+      });
 
-             proofUrl = result.secure.url;
-            }
-            const updatedTask = await taskModel.findByIdAndUpdate(
-                id,
-                { proofImage: proofUrl },
-                {new: true}
-            );
+      proofUrl = result.secure_url;
+    }
 
-            res.status.json(200).json(updatedTask)
-        }
-        catch(error){
-            console.error("Error while updating proof image", error)
-            res.status(500).json({ message: "Failed to updated proof image"})
-        }
+    const updatedTask = await taskModel.findByIdAndUpdate(
+      id,
+      { proofUrl },
+      { new: true }
+    );
 
+    if (!updatedTask) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    res.status(200).json(updatedTask);
+  } catch (error) {
+    console.error("Error while updating proof image:", error);
+    res.status(500).json({ message: "Failed to update proof image" });
   }
+};
+
  
 
 export default{

@@ -2,14 +2,15 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Eye, X, Upload } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import toast from "react-hot-toast"
 
 const ToDoTable = () => {
   const [tasks, setTasks] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [file, setFile] = useState(null); // file state
-  const [uploading, setUploading] = useState(false); // loading state
+  const [file, setFile] = useState(null); 
+  const [uploading, setUploading] = useState(false); 
 
   const userId = localStorage.getItem("userId");
 
@@ -55,46 +56,43 @@ const ToDoTable = () => {
     return "bg-gray-100 text-gray-700 border border-gray-300";
   };
 
-  // ✅ Handle proof file upload
-  const handleUpload = async () => {
-    if (!file || !selectedTask) return;
+const handleUpload = async () => {
+  if (!file || !selectedTask) return;
 
-    const formData = new FormData();
-    formData.append("proofImage", file);
+  const formData = new FormData();
+  formData.append("proofImage", file); 
 
-    try {
-      setUploading(true);
-      const res = await axios.put(
-        `http://localhost:5000/api/task/${selectedTask._id}/proof`,
+  try {
+    setUploading(true);
+    const res = await axios.put(
+      `http://localhost:5000/api/task/updateproofimage/${selectedTask._id}`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
-          withCredentials: true,
+          withCredentials: true, 
         }
-      );
+    );
 
-      // update UI with new proof image
-      setTasks((prev) =>
-        prev.map((t) =>
-          t._id === selectedTask._id
-            ? { ...t, proofImage: res.data.proofImage }
-            : t
-        )
-      );
-      setSelectedTask(res.data);
-      setFile(null); // clear file
-    } catch (err) {
-      console.error("Upload failed:", err);
-    } finally {
-      setUploading(false);
-    }
-  };
+    setTasks((prev) =>
+      prev.map((t) =>
+        t._id === selectedTask._id ? res.data : t
+      )
+    );
+    setSelectedTask(res.data); 
+    setFile(null);
+    toast.success("image Proof uploaded Successfully")
+  } catch (err) {
+    console.error("Upload failed:", err);
+  } finally {
+    setUploading(false);
+  }
+};
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-gray-200 rounded">
       <div className="overflow-hidden rounded-2xl shadow-xl bg-white">
         <table className="w-full text-sm text-left">
-          <thead className="bg-gradient-to-r from-blue-900 to-blue-950 text-white text-sm uppercase tracking-wide">
+          <thead className="bg-gradient-to-r from-gray-900 to-gray-950 text-white text-sm uppercase tracking-wide">
             <tr>
               <th className="px-6 py-3">Employee</th>
               <th className="px-6 py-3">Status</th>
@@ -200,7 +198,6 @@ const ToDoTable = () => {
                              file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
                 />
 
-                {/* Preview if image */}
                 {file && file.type.startsWith("image/") && (
                   <img
                     src={URL.createObjectURL(file)}
@@ -223,7 +220,6 @@ const ToDoTable = () => {
                 </button>
               </div>
 
-              {/* Show current proof image if exists */}
               {selectedTask.proofImage && (
                 <div className="mt-4">
                   <h4 className="font-semibold mb-2">Current Proof:</h4>

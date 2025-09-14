@@ -13,7 +13,7 @@ const ViewTable = () => {
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [savingComment, setSavingComment] = useState(null);
-  const [selectedImage, setSelectedImage] = useState(null); // ✅ For modal
+  const [selectedImage, setSelectedImage] = useState(null); 
   const currentUser = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
@@ -164,10 +164,10 @@ const ViewTable = () => {
                   {/* Proof (clickable) */}
                   <td className="px-6 py-4">
                     <img
-                      onClick={() => setSelectedImage(task.proofImage || Profile)}
+                      onClick={() => setSelectedImage(task.proofUrl)}
                       className="w-14 h-14 rounded-lg object-cover border cursor-pointer hover:scale-105 transition"
-                      src={task.proofImage || Profile}
-                      alt="Proof"
+                      src={task.proofUrl}
+                      alt="No Proof"
                     />
                   </td>
 
@@ -228,7 +228,6 @@ const ViewTable = () => {
         </table>
       </div>
 
-      {/* ✅ Modal for image view */}
       {selectedImage && (
         <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="relative bg-white p-4 rounded-lg max-w-3xl max-h-[90vh]">
