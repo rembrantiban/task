@@ -1,18 +1,22 @@
 import React, { useState, useEffect, useRef } from "react";
 import Profile from "../../assets/profile.jpg";
-import axios from "axios";
+import axiosInstance from "../../lib/axios.js";
 import { Link } from "react-router-dom";
 import { useReactToPrint } from "react-to-print";
 import { Printer, CheckCircle2, Loader2 } from "lucide-react";
 import { FaClockRotateLeft, FaClock } from "react-icons/fa6";
 import DeleteModal from "../../Modal/deleteTaskModal.jsx";
-import ExportTasksPreview from "./ExportTasksPreview.jsx"; // Import the component
+
+import ExportTasksPreview from "./ExportTasksPreview.jsx"; 
 
 const ViewTable = () => {
   const [staff, setStaff] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
+
+ 
+
 
   const printRef = useRef();
 
@@ -29,8 +33,8 @@ const ViewTable = () => {
   useEffect(() => {
     const fetchStaff = async () => {
       try {
-        const res = await axios.get(
-          "http://localhost:5000/api/task/getallassignedtasks",
+        const res = await axiosInstance.get(
+          "/task/getallassignedtasks",
           { withCredentials: true }
         );
         setStaff(res.data.tasks || []);
@@ -81,19 +85,18 @@ const ViewTable = () => {
 
   return (
     <div className="w-full p-4 bg-neutral-100 rounded-xl">
-      {/* Header */}
+
       <div className="flex flex-col md:flex-row items-center justify-between bg-white p-4 rounded-2xl shadow-md mb-6">
         <h2 className="text-xl font-semibold text-gray-800">📋 Assigned Tasks</h2>
         <div className="flex items-center gap-3 mt-3 md:mt-0">
-          {/* Print button */}
-          <button
+             <button
             onClick={handlePrint}
             className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium shadow transition bg-blue-600 hover:bg-blue-700 text-white"
           >
             <Printer className="h-4 w-4" /> Print Table
           </button>
 
-          {/* Search */}
+
           <div className="relative">
             <input
               type="text"
@@ -180,8 +183,6 @@ const ViewTable = () => {
           </tbody>
         </table>
       </div>
-
-      {/* Hidden component for printing */}
       <div className="hidden">
         <ExportTasksPreview ref={printRef} tasks={filteredStaff} />
       </div>

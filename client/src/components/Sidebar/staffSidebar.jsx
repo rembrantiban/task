@@ -3,7 +3,8 @@ import { MdMenu } from "react-icons/md";
 import { GoDotFill } from "react-icons/go";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+
+import axiosInstance from "../../lib/axios";
 import { toast } from "react-hot-toast";
 
 function StaffHeader() {
@@ -15,7 +16,7 @@ function StaffHeader() {
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:5000/api/user/logout", {
+      await axiosInstance.post("/user/logout", {
         withCredentials: true,
       });
       localStorage.removeItem("userId");
@@ -33,9 +34,8 @@ function StaffHeader() {
   useEffect(() => {
     const userId = localStorage.getItem("userId");
     if (!userId) return;
-
-    axios
-      .get(`http://localhost:5000/api/user/profile/${userId}`)
+    axiosInstance
+      .get(`/user/profile/${userId}`)
       .then((res) => {
         if (res.data.success) {
           setFirstName(res.data.profile.firstName);

@@ -4,7 +4,6 @@ import Home from './pages/Home'
 import Dashboard from './pages/dashboard'
 import Employee from './pages/employee.jsx'
 import ViewEmployee from './pages/viewEmployee.jsx'
-import axios from 'axios'
 import Hrdashboard from './pages/Hrdashboard.jsx'
 import StaffProfile from './pages/staffProfile.jsx';
 import Staffdashboard from './pages/StaffDashboard.jsx'
@@ -16,8 +15,6 @@ import UpdateTask  from './pages/updateTask.jsx'
 import Register from "./pages/register.jsx"
 import ProtectedRoute from './middleware/ProtectedRoutes.jsx'
 
-axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://localhost:5000/api";
 
 function App() {
   return (

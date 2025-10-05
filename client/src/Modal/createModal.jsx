@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { CircleX, CircleCheck, Upload } from "lucide-react";
+<<<<<<< HEAD
 import axios from "axios";
+=======
+import axiosInstance from "../lib/axios";
+>>>>>>> 7c3a562 (Task Management)
 import { toast } from "react-hot-toast";
 
 const CreateModal = () => {
@@ -34,8 +38,13 @@ const CreateModal = () => {
         if (value) formData.append(key, value);
       });
 
+<<<<<<< HEAD
       const res = await axios.post(
         "http://localhost:5000/api/user/register",
+=======
+      const res = await axiosInstance.post(
+        "/user/register",
+>>>>>>> 7c3a562 (Task Management)
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

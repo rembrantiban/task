@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
+<<<<<<< HEAD
 import axios from "axios";
+=======
+import axiosInstance  from "../lib/axios.js";
+>>>>>>> 7c3a562 (Task Management)
 import Header from "../components/common/staffHeader.jsx";
 import { motion } from "framer-motion";
 import Record from "../components/common/record.jsx";
@@ -18,8 +22,13 @@ const StaffDashboard = () => {
       const token = localStorage.getItem("token");
       if (!token) return setPendingTasks(0);
       try {
+<<<<<<< HEAD
         const { data } = await axios.get(
           "http://localhost:5000/api/task/userpendingtasks",
+=======
+        const { data } = await axiosInstance.get(
+          "/task/userpendingtasks",
+>>>>>>> 7c3a562 (Task Management)
           {
             withCredentials: true,
             headers: { Authorization: `Bearer ${token}` },
@@ -38,8 +47,13 @@ const StaffDashboard = () => {
       const token = localStorage.getItem("token");
       if (!token) return setInProgress(0);
       try {
+<<<<<<< HEAD
         const { data } = await axios.get(
           "http://localhost:5000/api/task/userinprogress",
+=======
+        const { data } = await axiosInstance.get(
+          "/task/userinprogress",
+>>>>>>> 7c3a562 (Task Management)
           {
             withCredentials: true,
             headers: { Authorization: `Bearer ${token}` },
@@ -58,8 +72,13 @@ const StaffDashboard = () => {
       const token = localStorage.getItem("token");
       if (!token) return setCompletedTasks(0);
       try {
+<<<<<<< HEAD
         const { data } = await axios.get(
           "http://localhost:5000/api/task/usercompletedtasks",
+=======
+        const { data } = await axiosInstance.get(
+          "/task/usercompletedtasks",
+>>>>>>> 7c3a562 (Task Management)
           {
             withCredentials: true,
             headers: { Authorization: `Bearer ${token}` },

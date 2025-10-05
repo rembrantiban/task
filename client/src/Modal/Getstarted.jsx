@@ -1,7 +1,11 @@
 import { Button, Checkbox, Label, Modal, ModalBody, ModalHeader, TextInput, Spinner } from "flowbite-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+<<<<<<< HEAD
 import axios from "axios";
+=======
+import axiosInstance from "../lib/axios";
+>>>>>>> 7c3a562 (Task Management)
 import { toast } from "react-hot-toast";
 import { Minus  } from "lucide-react";
 
@@ -25,7 +29,11 @@ export function GetStarted() {
     e.preventDefault();
     setLoading(true);
     try {
+<<<<<<< HEAD
       const res = await axios.post("http://localhost:5000/api/user/login", { email, password }, { withCredentials: true });
+=======
+      const res = await axiosInstance.post("/user/login", { email, password }, { withCredentials: true });
+>>>>>>> 7c3a562 (Task Management)
 
       if (res.data.success) {
         toast.success("Login successful!");

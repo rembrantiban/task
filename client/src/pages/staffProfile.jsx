@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "../lib/axios";
 import { MdErrorOutline } from "react-icons/md";
 
 import { useNavigate } from "react-router-dom";
@@ -75,8 +75,8 @@ const StaffProfile = () => {
       }),
     };
 
-    const res = await axios.put(
-      `http://localhost:5000/api/user/update/${userId}`,
+    const res = await axiosInstance.put(
+      `/user/update/${userId}`,
       formData, 
       config
     );

@@ -1,8 +1,10 @@
 import React, { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
+import { Printer } from "lucide-react";
 
-const ExportTasksPreview = ({ tasks, currentUser  }) => {
+const ExportTasksPreview = ({ tasks  }) => {
   const printRef = useRef();
+  const userRole = localStorage.getItem("userRole")?.trim().toUpperCase();
 
   const handlePrint = useReactToPrint({
     content: () => printRef.current,
@@ -11,12 +13,13 @@ const ExportTasksPreview = ({ tasks, currentUser  }) => {
 
   return (
     <div className="flex flex-col items-center space-y-4">
-     { currentUser !== "HR" && (
+
+     { userRole !== "HR" && (
       <button
         onClick={handlePrint}
         className="px-5 py-2 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-500 transition font-medium flex items-center gap-2"
       >
-        🖨️ Print
+        <Printer size={20} /> Print
       </button>
      )
        

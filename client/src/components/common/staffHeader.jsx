@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../../lib/axios";
 import { toast } from "react-hot-toast";
 import { GoDotFill } from "react-icons/go";
 import { Menu, X } from "lucide-react";
@@ -14,9 +14,7 @@ const StaffHeader = ({ title }) => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:5000/api/user/logout", {
-        withCredentials: true,
-      });
+      await axiosInstance.post("/user/logout", {}, { withCredentials: true });
       localStorage.clear();
       toast.success("Logout successfully");
       navigate("/");
@@ -26,7 +24,6 @@ const StaffHeader = ({ title }) => {
     }
   };
 
-  // User details
   const firstName = localStorage.getItem("userFirstName") || "";
   const lastName = localStorage.getItem("userLastName") || "";
   const role = localStorage.getItem("userRole") || "Staff";
@@ -41,7 +38,12 @@ const StaffHeader = ({ title }) => {
 
   return (
     <header className="flex items-center justify-between bg-gray-900 px-6 py-4 shadow-md relative">
-      <h1 className="text-xl font-bold text-white">{title}</h1>
+      <div className="flex items-center gap-3">
+        <img src="/icon.png" alt="icon" className="h-10 w-auto object-contain" />
+        <h1 className="text-white text-xl font-semibold hidden sm:block">
+          Task Management System
+        </h1>
+      </div>
 
       <button
         className="md:hidden text-white"
@@ -55,12 +57,11 @@ const StaffHeader = ({ title }) => {
           <motion.div key={idx} whileHover={{ scale: 1.05 }}>
             <Link
               to={item.to}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all
-                ${
-                  location.pathname === item.to
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-800 text-gray-300 hover:bg-blue-600 hover:text-white"
-                }`}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                location.pathname === item.to
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-800 text-gray-300 hover:bg-blue-600 hover:text-white"
+              }`}
             >
               {item.icon}
               <span>{item.label}</span>
@@ -113,12 +114,11 @@ const StaffHeader = ({ title }) => {
                 <Link
                   key={idx}
                   to={item.to}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all
-                    ${
-                      location.pathname === item.to
-                        ? "bg-blue-600 text-white"
-                        : "bg-gray-700 text-gray-200 hover:bg-blue-600 hover:text-white"
-                    }`}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                    location.pathname === item.to
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-700 text-gray-200 hover:bg-blue-600 hover:text-white"
+                  }`}
                   onClick={() => setIsOpen(false)}
                 >
                   {item.icon}
@@ -126,7 +126,6 @@ const StaffHeader = ({ title }) => {
                 </Link>
               ))}
 
-              {/* Logout */}
               <button
                 onClick={handleLogout}
                 className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-500 transition-all"

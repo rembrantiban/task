@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../../lib/axios";
 import { toast } from "react-hot-toast";
 import { GoDotFill } from "react-icons/go";
 import { FaHome, FaUserPlus, FaClipboardList, FaTasks, FaSignOutAlt } from "react-icons/fa";
-import { HiMenu, HiX } from "react-icons/hi"; 
+import { HiMenu, HiX } from "react-icons/hi";
 
-const Header = ({ title }) => {
+const Header = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:5000/api/user/logout", {
+      await axiosInstance.post("/user/logout", {
         withCredentials: true,
       });
       localStorage.clear();
@@ -29,7 +29,7 @@ const Header = ({ title }) => {
   const lastName = localStorage.getItem("userLastName") || "";
   const image =
     localStorage.getItem("userImage") ||
-    "https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff";
+    "/avatar.jpg"; 
 
   const navLinks = [
     { to: "/dashboard", label: "Dashboard", icon: <FaHome /> },
@@ -39,10 +39,18 @@ const Header = ({ title }) => {
   ];
 
   return (
-    <header className="flex items-center justify-between bg-gray-900 px-6 py-4 shadow-md">
-      <h1 className="text-xl font-bold text-white">{title}</h1>
+    <header className="flex items-center justify-between bg-gray-900 px-6 py-4 shadow-md relative">
+      <div className="flex items-center gap-3">
+        <img
+          src="/icon.png"
+          alt="icon"
+          className="h-12 w-auto object-contain"
+        />
+        <h1 className="text-white text-xl font-semibold hidden sm:block">
+          Task Management System
+        </h1>
+      </div>
 
-      {/* Mobile Menu Button */}
       <button
         className="md:hidden text-white"
         onClick={() => setIsOpen(!isOpen)}
@@ -50,10 +58,9 @@ const Header = ({ title }) => {
         {isOpen ? <HiX size={28} /> : <HiMenu size={28} />}
       </button>
 
-      {/* Desktop Navigation */}
       <nav className="hidden md:flex gap-4">
         {navLinks.map((item, idx) => (
-          <motion.div key={idx} whileHover={{ scale: 1.05 }} className="group">
+          <motion.div key={idx} whileHover={{ scale: 1.05 }}>
             <Link
               to={item.to}
               className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-800 text-gray-300 hover:bg-blue-600 hover:text-white transition-all"
@@ -75,7 +82,6 @@ const Header = ({ title }) => {
         </motion.div>
       </nav>
 
-      {/* Profile Info (Desktop) */}
       <div className="hidden md:flex items-center gap-3">
         <Link to="/profile">
           <img
@@ -94,7 +100,6 @@ const Header = ({ title }) => {
         </div>
       </div>
 
-      {/* Mobile Dropdown */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -115,6 +120,7 @@ const Header = ({ title }) => {
                   <span>{item.label}</span>
                 </Link>
               ))}
+
               <button
                 onClick={handleLogout}
                 className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-500 transition-all"
@@ -124,11 +130,13 @@ const Header = ({ title }) => {
               </button>
 
               <div className="flex items-center gap-3 mt-3">
-                <img
-                  src={image}
-                  alt="User"
-                  className="rounded-full w-10 h-10 object-cover ring-2 ring-blue-500"
-                />
+                <Link to="/profile">
+                  <img
+                    src={image}
+                    alt="User"
+                    className="rounded-full w-10 h-10 object-cover ring-2 ring-blue-500"
+                  />
+                </Link>
                 <div>
                   <p className="text-sm font-semibold text-blue-400">
                     {firstName} {lastName}

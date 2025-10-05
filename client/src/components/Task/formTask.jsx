@@ -1,7 +1,7 @@
-import axios from "axios";
 import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
+import axiosInstance from "../../lib/axios";
 
 const FormTask = () => {
   const [loading, setLoading] = useState(false);
@@ -14,12 +14,12 @@ const FormTask = () => {
     assign: "",
   });
 
-  // Fetch employees + task titles
+
   const fetchData = async () => {
     try {
       const [staffRes, titlesRes] = await Promise.all([
-        axios.get("http://localhost:5000/api/user/getallstaff"),
-        axios.get("http://localhost:5000/api/title/getTask"),
+        axiosInstance.get("/user/getallstaff"),
+        axiosInstance.get("/title/getTask"),
       ]);
 
       setEmployees(staffRes.data.users || []);
@@ -44,8 +44,8 @@ const FormTask = () => {
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/title/tasktitle",
+      const response = await axiosInstance.post(
+        "/title/tasktitle",
         { task: taskTitle }
       );
 
@@ -75,8 +75,9 @@ const FormTask = () => {
 
     try {
       const createdBy = localStorage.getItem("userId");
-      const response = await axios.post(
-        "http://localhost:5000/api/task/create",
+
+      const response = await axiosInstance.post(
+        "/task/create",
         {
           ...formTask,
           createdBy,
@@ -220,7 +221,6 @@ const FormTask = () => {
           </motion.form>
         </div>
 
-        {/* Employee List */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}

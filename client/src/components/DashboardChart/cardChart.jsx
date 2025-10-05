@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from "recharts";
 import Card from "../../components/common/Card";
-import axios from "axios";
+
+import axiosInstance from "../../lib/axios";
 
 const COLORS = ["#3B82F6", "#F59E0B", "#10B981"]; 
 
@@ -13,7 +14,7 @@ const DashboardRecharts = () => {
   useEffect(() => {
     const fetchCompleted = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/task/completedtasks", { withCredentials: true });
+        const res = await axiosInstance.get("/task/completedtasks", { withCredentials: true });
         setCompleted(res.data.completedTasks || 0);
       } catch {
         setCompleted(0);
@@ -25,7 +26,7 @@ const DashboardRecharts = () => {
   useEffect(() => {
     const fetchPending = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/task/pendingtasks");
+        const res = await axiosInstance.get("/task/pendingtasks");
         setPending(res.data.pendintasks || 0);
       } catch {
         setPending(0);
@@ -37,7 +38,7 @@ const DashboardRecharts = () => {
   useEffect(() => {
     const fetchInProgress = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/task/inprogress");
+        const res = await axiosInstance.get("/task/inprogress");
         setInProgress(res.data.inprogress || 0);
       } catch {
         setInProgress(0);

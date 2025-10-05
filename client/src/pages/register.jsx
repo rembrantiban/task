@@ -9,7 +9,11 @@ import {
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom"; 
 import { toast } from "react-hot-toast";
+<<<<<<< HEAD
 import axios from "axios";
+=======
+import axiosInstance from "../lib/axios";
+>>>>>>> 7c3a562 (Task Management)
 
 export function RegisterForm() {
   const [formData, setFormData] = useState({
@@ -40,7 +44,11 @@ export function RegisterForm() {
     }
 
     try {
+<<<<<<< HEAD
       const res = await axios.post("http://localhost:5000/api/user/register",  formData,  { withCredentials: true });
+=======
+      const res = await axiosInstance.post("/user/register",  formData,  { withCredentials: true });
+>>>>>>> 7c3a562 (Task Management)
 
       if (res.data.success) {
         toast.success("Registration successful!");

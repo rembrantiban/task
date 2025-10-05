@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
 import Profile from "../../assets/profile.jpg";
 import CreateModal from "../../Modal/createModal.jsx";
-import axios from "axios";
+import axiosInstance from "../../lib/axios.js";
 import DeleteModal from "../../Modal/deleteModal.jsx";
 import { PrinterCheck, Search, Eye, X } from "lucide-react";
 import { useReactToPrint } from "react-to-print";
-import { PDFDownloadLink } from "@react-pdf/renderer";   // ✅ Import this
-import AssignedTasksPdf from "../Document/AssignedTasksPdf.jsx"; // ✅ Import your PDF component
+import { PDFDownloadLink } from "@react-pdf/renderer";   
+import AssignedTasksPdf from "../Document/AssignedTasksPdf.jsx"; 
+
 
 const EmployeeTable = () => {
   const [staff, setStaff] = useState([]);
@@ -25,7 +26,7 @@ const EmployeeTable = () => {
     onAfterPrint: () => console.log("Print success"),
   });
 
-  // Search debounce
+
   useEffect(() => {
     const timeout = setTimeout(() => setDebouncedSearch(search), 300);
     return () => clearTimeout(timeout);
@@ -35,8 +36,8 @@ const EmployeeTable = () => {
   useEffect(() => {
     const fetchStaff = async () => {
       try {
-        const res = await axios.get(
-          "http://localhost:5000/api/user/getallstaff",
+        const res = await axiosInstance.get(
+          "/user/getallstaff",
           { withCredentials: true }
         );
         setStaff(res.data.users || []);
@@ -56,13 +57,11 @@ const EmployeeTable = () => {
   );
 
   return (
-    <div className="w-full max-w-7xl mx-auto p-6 text-gray-900 dark:text-white">
-      {/* Top Controls */}
-      <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
-        <CreateModal />
 
+    <div className="w-full max-w-7xl mx-auto p-6 bg-neutral-100 text-gray-900 dark:text-white">
+       <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
+        <CreateModal />
         <div className="flex items-center gap-3 w-full md:w-auto">
-          {/* Search */}
           <div className="relative w-full md:w-64">
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
             <input
@@ -74,7 +73,6 @@ const EmployeeTable = () => {
             />
           </div>
 
-          {/* Export PDF */}
           <PDFDownloadLink
             document={<AssignedTasksPdf tasks={filteredStaff} />} // ✅ Pass filtered staff here
             fileName="staff-list.pdf"
@@ -89,8 +87,6 @@ const EmployeeTable = () => {
           </PDFDownloadLink>
         </div>
       </div>
-
-      {/* Table */}
       <div
         ref={printRef}
         className="p-6 overflow-hidden rounded-xl shadow-lg border border-gray-200 dark:border-gray-700"

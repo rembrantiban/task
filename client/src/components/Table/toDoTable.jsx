@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+
 import { Eye, X, Upload } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast"
+import axiosInstance from "../../lib/axios";
+
 
 const ToDoTable = () => {
   const [tasks, setTasks] = useState([]);
@@ -16,8 +18,9 @@ const ToDoTable = () => {
 
   useEffect(() => {
     if (!userId) return;
-    axios
-      .get(`http://localhost:5000/api/task/getuserassign/${userId}`)
+
+    axiosInstance
+      .get(`/task/getuserassign/${userId}`)
       .then((res) => setTasks(res.data.tasks || []))
       .catch(() => setTasks([]));
   }, [userId]);
@@ -32,7 +35,8 @@ const ToDoTable = () => {
     const nextStatus = getNextStatus(task.status);
     if (!nextStatus) return;
     try {
-      await axios.put(`http://localhost:5000/api/task/updatestatus`, {
+
+      await axiosInstance.put(`/task/updatestatus`, {
         taskId: task._id,
         status: nextStatus,
       });
@@ -64,8 +68,9 @@ const handleUpload = async () => {
 
   try {
     setUploading(true);
-    const res = await axios.put(
-      `http://localhost:5000/api/task/updateproofimage/${selectedTask._id}`,
+
+    const res = await axiosInstance.put(
+      `/task/updateproofimage/${selectedTask._id}`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

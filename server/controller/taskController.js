@@ -33,7 +33,7 @@ export const createTask = async (req, res ) => {
     try {
         const tasks = await taskModel.find({})
             .populate('assign', 'firstName lastName email role image')
-            .select('title description assign status proofUrl');
+            .select('title description assign status proofUrl createdAt');
         return res.status(200).json({
             success: true,
             tasks

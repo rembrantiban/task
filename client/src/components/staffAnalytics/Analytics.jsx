@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '../../lib/axios';
 
 import {
   PieChart,
@@ -28,7 +28,7 @@ useEffect(() => {
     }
 
     try {
-      const response = await axios.get('http://localhost:5000/api/task/userpendingtasks', {
+      const response = await axiosInstance.get('/task/userpendingtasks', {
         withCredentials:true,
         headers: {
           Authorization: `Bearer ${token}`,
@@ -51,7 +51,7 @@ useEffect(() => {
       const fetchingInprogress = async () => {
             const token = localStorage.getItem('token');
           try{
-              const response =  await axios.get('http://localhost:5000/api/task/userinprogress',{
+              const response =  await axiosInstance.get('/task/userinprogress',{
                  withCredentials: true,
                  headers: {
                     Authorization: `Bearer ${token}`,
@@ -73,7 +73,8 @@ useEffect(() => {
        const fetchingCompletedTasks = async () => {
            const token = localStorage.getItem('token');
          try{
-            const response = await axios.get('http://localhost:5000/api/task/usercompletedtasks',
+
+            const response = await axiosInstance.get('/task/usercompletedtasks',
                 { withCredentials: true, 
                   headers: {
                     Authorization: `Bearer ${token}`,

@@ -4,7 +4,12 @@ import StatCard from "../components/common/statcard.jsx";
 import Header from "../components/common/header.jsx";
 import CardChart from "../components/DashboardChart/cardChart.jsx";
 import { useEffect, useState } from "react";
+<<<<<<< HEAD
 import axios from "axios";
+=======
+import axiosInstance from "../lib/axios.js";
+
+>>>>>>> 7c3a562 (Task Management)
 
 const Dashboard = () => {
   const [users, setUser] = useState("0");
@@ -14,7 +19,11 @@ const Dashboard = () => {
   useEffect(() =>  {
   const fetchtotalTask = async () => {
        try{
+<<<<<<< HEAD
           const response = await axios.get("http://localhost:5000/api/title/gettotaltask")  
+=======
+          const response = await axiosInstance.get("/title/gettotaltask")  
+>>>>>>> 7c3a562 (Task Management)
           setTotalTask(response.data.totalTask || "0");
           console.log(response.data.totalTask); 
      }
@@ -29,8 +38,13 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+<<<<<<< HEAD
         const response = await axios.get(
           "http://localhost:5000/api/user/totalstaff"
+=======
+        const response = await axiosInstance.get(
+          "/user/totalstaff"
+>>>>>>> 7c3a562 (Task Management)
         );
         setUser(response.data.totalStaff || "0");
         console.log(response.data.totalStaff);
@@ -44,8 +58,13 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
+<<<<<<< HEAD
         const response = await axios.get(
           "http://localhost:5000/api/task/totaltask"
+=======
+        const response = await axiosInstance.get(
+          "/task/totaltask"
+>>>>>>> 7c3a562 (Task Management)
         );
         setTasks(response.data.totalTask || "0");
         console.log(response.data.totalTask);

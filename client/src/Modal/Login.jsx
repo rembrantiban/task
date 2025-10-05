@@ -10,7 +10,7 @@ import {
 } from "flowbite-react";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../lib/axios";
 import { toast } from "react-hot-toast";
 import { User } from "lucide-react";
 
@@ -34,8 +34,9 @@ export function Login() {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/user/login", 
+
+      const res = await axiosInstance.post(
+        "/user/login", 
         { email, password }, 
         { withCredentials: true }
       );
@@ -46,16 +47,20 @@ export function Login() {
 
         localStorage.setItem("token", res.data.token);
 
-        const { firstName, lastName, role, email, phone, password, image, id } = res.data.user;
 
-        localStorage.setItem("userId", id);
+        const { _id, firstName, lastName, role, email, phone, password, image } = res.data.user;
+
+
+        localStorage.setItem("userId", _id);
         localStorage.setItem("userFirstName", firstName);
         localStorage.setItem("userLastName", lastName);
         localStorage.setItem("userEmail", email);
         localStorage.setItem("userPhone", phone);
-        localStorage.setItem("userpassword", password);
+
+        localStorage.setItem("userPassword", password);
         localStorage.setItem("userRole", role);
         localStorage.setItem("userImage", image);
+
 
         if (role === "Admin" || role === "HR") navigate("/dashboard");
         else if (role === "Staff") navigate("/staffdashboard");

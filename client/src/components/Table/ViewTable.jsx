@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Profile from "../../assets/profile.jpg";
-import axios from "axios";
+import axiosInstance from "../../lib/axios.js";
 import { Link } from "react-router-dom";
 import { FaClockRotateLeft, FaClock } from "react-icons/fa6";
 import { CheckCircle2, Loader2, X } from "lucide-react"; 
@@ -24,8 +24,8 @@ const ViewTable = () => {
   useEffect(() => {
     const fetchStaff = async () => {
       try {
-        const res = await axios.get(
-          "http://localhost:5000/api/task/getallassignedtasks",
+        const res = await axiosInstance.get(
+          "/task/getallassignedtasks",
           { withCredentials: true }
         );
         setStaff(res.data.tasks || []);
@@ -77,8 +77,8 @@ const ViewTable = () => {
   const handleSaveComment = async (taskId, comment) => {
     try {
       setSavingComment(taskId);
-      await axios.put(
-        `http://localhost:5000/api/task/${taskId}/comment`,
+      await axiosInstance.put(
+        `/task/${taskId}/comment`,
         { comment },
         { withCredentials: true }
       );
