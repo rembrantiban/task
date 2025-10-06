@@ -6,6 +6,7 @@ import { FaClockRotateLeft, FaClock } from "react-icons/fa6";
 import { CheckCircle2, Loader2, X } from "lucide-react"; 
 import DeleteModal from "../../Modal/deleteTaskModal.jsx";
 import ExportTasksPreview from "../Document/ExportTasksPreview.jsx";
+import toast from "react-hot-toast";
 
 const ViewTable = () => {
   const [staff, setStaff] = useState([]);
@@ -74,25 +75,33 @@ const ViewTable = () => {
     }
   };
 
-  const handleSaveComment = async (taskId, comment) => {
-    try {
-      setSavingComment(taskId);
-      await axiosInstance.put(
-        `/task/${taskId}/comment`,
-        { comment },
-        { withCredentials: true }
-      );
-      setStaff((prev) =>
-        prev.map((t) =>
-          t._id === taskId ? { ...t, comment: comment } : t
-        )
-      );
-    } catch (err) {
-      console.error("Failed to save comment:", err);
-    } finally {
-      setSavingComment(null);
+ const handleSaveComment = async (taskId, comment) => {
+  try {
+    if (!comment.trim()) {
+      toast.error("Comment cannot be empty");
+      return;
     }
-  };
+    
+    setSavingComment(taskId);
+
+    const res = await axiosInstance.put(
+      `/task/addcomment/${taskId}`,
+      { comment },
+      { withCredentials: true }
+    );
+    
+    setStaff((prev) =>
+      prev.map((t) => (t._id === taskId ? res.data : t))
+    );
+
+    toast.success("Comment saved successfully");
+  } catch (err) {
+    console.error("Failed to save comment:", err);
+    toast.error("Failed to save comment");
+  } finally {
+    setSavingComment(null);
+  }
+};
 
   return (
     <div className="w-full p-4 bg-neutral-100 rounded-xl">
@@ -140,14 +149,16 @@ const ViewTable = () => {
             ) : (
               filteredStaff.map((task) => (
                 <tr key={task._id} className="border-b border-gray-200 hover:bg-gray-50 transition">
-                  {/* Name */}
                   <td className="px-6 py-4 flex items-center gap-3">
                     <img
                       className="w-10 h-10 rounded-full object-cover"
                       src={task.assign?.image || Profile}
                       alt="User"
                     />
-                    <span className="font-medium">{task.assign?.firstName} {task.assign?.lastName}</span>
+                   <div className="flex flex-col">
+                     <span className="font-medium">{task.assign?.firstName} {task.assign?.lastName}</span>
+                     <span className="text-xs text-gray-500">{task.assign?.email}</span>
+                   </div>
                   </td>
 
                   {/* Position */}

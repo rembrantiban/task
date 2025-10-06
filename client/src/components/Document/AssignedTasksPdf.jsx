@@ -15,9 +15,6 @@ const ViewTable = () => {
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
- 
-
-
   const printRef = useRef();
 
   const handlePrint = useReactToPrint({

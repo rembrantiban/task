@@ -8,6 +8,7 @@ import {
   updatedTask,
   getTotalTask,
   updateProofUrl,
+  addCommentToTask,
 } from '../controller/taskController.js';
 import {
        getCompletedTask,
@@ -41,6 +42,7 @@ taskRouter.get("/inprogress",  getInProgressTasks)
 taskRouter.get('/userpendingtasks', requireAuth , getUserPendingTasks);
 taskRouter.get('/userinprogress', requireAuth, getUserInProgressTasks);
 taskRouter.get('/usercompletedtasks', requireAuth, getUserCompletedTasks);
-taskRouter.put("/updateproofimage/:id", upload.single("proofImage"), updateProofUrl)
+taskRouter.put("/updateproofimage/:id", upload.single("proofImage"), updateProofUrl);
+taskRouter.put("/addcomment/:taskId", requireAuth, addCommentToTask);
 
 export default taskRouter;

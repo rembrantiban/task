@@ -1,13 +1,6 @@
-<<<<<<< HEAD
-// client/src/components/Task/UpdateTask.jsx
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
-import axios from "axios";
-=======
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import axiosInstance from "../lib/axios";
->>>>>>> 7c3a562 (Task Management)
 import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
 
@@ -29,13 +22,8 @@ const UpdateTask = () => {
   const fetchData = async () => {
     try {
       const [staffRes, titlesRes] = await Promise.all([
-<<<<<<< HEAD
-        axios.get("http://localhost:5000/api/user/getallstaff"),
-        axios.get("http://localhost:5000/api/title/getTask"),
-=======
         axiosInstance.get("/user/getallstaff"),
         axiosInstance.get("/title/getTask"),
->>>>>>> 7c3a562 (Task Management)
       ]);
 
       setEmployees(staffRes.data.users || []);
@@ -55,11 +43,8 @@ const UpdateTask = () => {
   // Fetch task by ID
   const fetchTaskById = async () => {
     try {
-<<<<<<< HEAD
-      const res = await axios.get(`http://localhost:5000/api/task/${id}`);
-=======
+
       const res = await axiosInstance.get(`/task/${id}`);
->>>>>>> 7c3a562 (Task Management)
       if (res.data.success) {
         setFormTask({
           title: res.data.task.title,
@@ -82,13 +67,8 @@ const UpdateTask = () => {
     setLoading(true);
 
     try {
-<<<<<<< HEAD
-      const res = await axios.put(
-        `http://localhost:5000/api/task/updatetask/${id}`,
-=======
       const res = await axiosInstance.put(
         `/task/updatetask/${id}`,
->>>>>>> 7c3a562 (Task Management)
         formTask
       );
       if (res.data.success) {

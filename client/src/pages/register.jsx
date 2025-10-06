@@ -9,11 +9,8 @@ import {
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom"; 
 import { toast } from "react-hot-toast";
-<<<<<<< HEAD
-import axios from "axios";
-=======
 import axiosInstance from "../lib/axios";
->>>>>>> 7c3a562 (Task Management)
+import { Eye, EyeOff } from "lucide-react"; // 👈 Import icons
 
 export function RegisterForm() {
   const [formData, setFormData] = useState({
@@ -27,6 +24,11 @@ export function RegisterForm() {
   });
   const [disableButton, setDisableButton] = useState(true);
   const [loading, setLoading] = useState(false);
+
+  // 👇 Add states for showing/hiding passwords
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -44,11 +46,7 @@ export function RegisterForm() {
     }
 
     try {
-<<<<<<< HEAD
-      const res = await axios.post("http://localhost:5000/api/user/register",  formData,  { withCredentials: true });
-=======
-      const res = await axiosInstance.post("/user/register",  formData,  { withCredentials: true });
->>>>>>> 7c3a562 (Task Management)
+      const res = await axiosInstance.post("/user/register", formData, { withCredentials: true });
 
       if (res.data.success) {
         toast.success("Registration successful!");
@@ -65,7 +63,7 @@ export function RegisterForm() {
 
   return (
     <div 
-      className="min-h-screen flex items-center justify-center bg-cover bg-center " 
+      className="min-h-screen flex items-center justify-center bg-cover bg-center" 
       style={{ backgroundImage: "url('/background.jpg')" }}
     >
       <div className="w-full max-w-md bg-white/90 backdrop-blur-md rounded-2xl shadow-lg p-8">
@@ -74,6 +72,7 @@ export function RegisterForm() {
         </h3>
 
         <form className="space-y-6" onSubmit={handleRegister}>
+          {/* Name Fields */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="firstName">First Name</Label>
@@ -99,6 +98,7 @@ export function RegisterForm() {
             </div>
           </div>
 
+          {/* Email */}
           <div>
             <Label htmlFor="email">Email</Label>
             <TextInput
@@ -111,6 +111,7 @@ export function RegisterForm() {
             />
           </div>
           
+          {/* Phone */}
           <div>
             <Label htmlFor="phone">Phone Number</Label>
             <TextInput
@@ -124,6 +125,7 @@ export function RegisterForm() {
             />
           </div>
 
+          {/* Role */}
           <div>
             <Label htmlFor="role">Role</Label>
             <Select
@@ -135,34 +137,54 @@ export function RegisterForm() {
             >
               <option value="Staff">Staff</option>
               <option value="HR">HR</option>
-              <option value="Admin">Admin</option>
             </Select>
           </div>
 
+          {/* Password Field with Toggle */}
           <div>
             <Label htmlFor="password">Password</Label>
-            <TextInput
-              id="password"
-              name="password"
-              type="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
+            <div className="relative">
+              <TextInput
+                id="password"
+                name="password"
+                type={showPassword ? "text" : "password"} // 👈 Toggle type
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-2.5 text-gray-600 hover:text-gray-900"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
           </div>
 
+          {/* Confirm Password Field with Toggle */}
           <div>
             <Label htmlFor="confirmPassword">Confirm Password</Label>
-            <TextInput
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              required
-            />
+            <div className="relative">
+              <TextInput
+                id="confirmPassword"
+                name="confirmPassword"
+                type={showConfirmPassword ? "text" : "password"}
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-2.5 text-gray-600 hover:text-gray-900"
+              >
+                {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
           </div>
 
+          {/* Terms & Register */}
           <div className="flex gap-2">
             <Checkbox id="agree" onChange={e => setDisableButton(!e.target.checked)} />
             <Label htmlFor="agree">I agree to the terms and conditions</Label>

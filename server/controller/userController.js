@@ -181,7 +181,23 @@ export const updateUser = async (req, res) => {
       .json({ success: false, message: "Internal server error" });
   }
 };
+ 
+export const deleteUser = async (req, res) => { 
+  try { 
+    const userId = req.params.id; const deletedUser = await userModel.findByIdAndDelete(userId);
+     
+    if (!deletedUser) {
+       return res.status(404).json({ success: false, message: "User not found" });
+      } 
+      
+      return res.status(200).json({ success: true, message: "User deleted successfully", 
+        user: { id: deletedUser._id, firstName: deletedUser.firstName, lastName: deletedUser.lastName, email: deletedUser.email, role: deletedUser.role, image: deletedUser.image, } }); 
+      } catch (error){ 
+        console.error("Error while deleting user", error);
+       return res.status(500).json({ success: false, message: "Internal server error" }); 
+    } }
 
+    
 // ================= LOGOUT =================
 export const logoutUser = async (req, res) => {
   try {

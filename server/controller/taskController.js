@@ -100,28 +100,25 @@ export const deleteTask = async (req, res) => {
 }
 
 export const getUserAssignTask = async (req, res) => {
-    try {
-        const userId = req.params.id;
-        const createdBy = req.query.createdBy;
-        
-        const query =  {assign: userId};
-        if(createdBy){
-            query.createdBy = createdBy;
-        }
-       const tasks = await taskModel.find(query)
-        .populate('assign', 'firstName lastName email role image')
-         .populate('createdBy', 'firstName lastName email')
-        .select('title description assign status createdBy');
+  try {
+    const userId = req.params.id;
+    const createdBy = req.query.createdBy;
 
-        return res.status(200).json({
-            success: true,
-            tasks
-        });
-    } catch (error) {
-        console.error("Error while fetching assigned tasks", error);
-        return res.status(500).json({ success: false, message: 'Internal server error' });
-    }
-}
+
+    const query = { assign: userId };
+    if (createdBy) query.createdBy = createdBy;
+
+    const tasks = await taskModel.find(query)
+      .populate('assign', 'firstName lastName email role image')
+      .populate('createdBy', 'firstName lastName email role image')
+      .populate('comments.commentedBy', 'firstName lastName email role image')
+      .select('title description assign status createdBy comments proofUrl'); 
+    return res.status(200).json({ success: true, tasks });
+  } catch (error) {
+    console.error("Error while fetching assigned tasks", error);
+    return res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
 
     export const updatedTask = async (req, res) => {
         try{
@@ -133,7 +130,9 @@ export const getUserAssignTask = async (req, res) => {
                  assign,
             }
             , { new: true }
-            ).populate('assign', 'firstName lastName email role image');
+            ).populate('assign', 'firstName lastName email role image')
+            .populate('createdBy', 'firstName lastName email role image');
+             
             if(!updatedTask){
                 return res.status(404).json({ success: false, message: "Task not found"});
             }
@@ -192,7 +191,10 @@ export const getUserAssignTask = async (req, res) => {
       id,
       { proofUrl },
       { new: true }
-    );
+    )
+    .populate("createdBy", "firstName lastName email role image")
+    .populate("assign", "firstName lastName email role image")
+    .populate("comments.commentedBy", "firstName lastName email role image");
 
     if (!updatedTask) {
       return res.status(404).json({ message: "Task not found" });
@@ -205,6 +207,35 @@ export const getUserAssignTask = async (req, res) => {
   }
 };
 
+
+export const addCommentToTask = async (req, res ) => {
+    try{
+        const { taskId } = req.params;
+        const { comment } = req.body;
+        const userId = req.user.id;
+
+        const updatedTask = await taskModel.findByIdAndUpdate(
+            taskId, 
+            {
+                $push: { comments: { text: comment, commentedBy: userId }, },
+            },
+             { new: true },
+        )
+        .populate('comments.commentedBy', 'firstName lastName email role image')
+        .populate('assign', 'firstName lastName email role image')
+        .populate('createdBy', 'firstName lastName email role image');
+
+        res.status(200).json({
+            success: true,
+            message: "Comment added successfully",
+            comments: updatedTask.comments,
+        })
+    }
+    catch(error){
+        console.error("Error while adding comment to task", error);
+        res.status(500).json({ success: false, message: "Internal server error"});
+    }
+}
  
 
 export default{
@@ -216,4 +247,5 @@ export default{
   updatedTask,
   getTotalTask,
   updateProofUrl,
+  addCommentToTask,
 };

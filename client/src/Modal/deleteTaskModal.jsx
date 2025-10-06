@@ -2,11 +2,8 @@ import { Modal, ModalBody, ModalHeader, Button } from "flowbite-react";
 import { useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { toast } from 'react-hot-toast';
-<<<<<<< HEAD
-import axios from "axios";
-=======
+
 import axiosInstance from "../lib/axios";
->>>>>>> 7c3a562 (Task Management)
 
 const DeleteModal = ({ taskId, onDeleteSuccess }) => {
   const [openModal, setOpenModal] = useState(false);
@@ -15,11 +12,7 @@ const DeleteModal = ({ taskId, onDeleteSuccess }) => {
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
-<<<<<<< HEAD
-      const response = await axios.delete(`http://localhost:5000/api/task/delete/${taskId}`);
-=======
       const response = await axiosInstance.delete(`/task/delete/${taskId}`);
->>>>>>> 7c3a562 (Task Management)
       if (response.data.success) {
         window.location.reload(); 
         toast.success("Task deleted successfully");

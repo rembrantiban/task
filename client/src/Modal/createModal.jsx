@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import { CircleX, CircleCheck, Upload } from "lucide-react";
-<<<<<<< HEAD
-import axios from "axios";
-=======
+
 import axiosInstance from "../lib/axios";
->>>>>>> 7c3a562 (Task Management)
 import { toast } from "react-hot-toast";
 
 const CreateModal = () => {
@@ -38,13 +35,8 @@ const CreateModal = () => {
         if (value) formData.append(key, value);
       });
 
-<<<<<<< HEAD
-      const res = await axios.post(
-        "http://localhost:5000/api/user/register",
-=======
       const res = await axiosInstance.post(
         "/user/register",
->>>>>>> 7c3a562 (Task Management)
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -121,8 +113,7 @@ const CreateModal = () => {
                 </label>
               </div>
 
-              {/* Row 1: First & Last Name */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label
                     htmlFor="firstName"

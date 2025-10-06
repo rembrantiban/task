@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from "react";
-
 import { Eye, X, Upload } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import toast from "react-hot-toast"
+import toast from "react-hot-toast";
 import axiosInstance from "../../lib/axios";
-
 
 const ToDoTable = () => {
   const [tasks, setTasks] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const [file, setFile] = useState(null); 
-  const [uploading, setUploading] = useState(false); 
+  const [file, setFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
 
   const userId = localStorage.getItem("userId");
 
@@ -22,7 +19,11 @@ const ToDoTable = () => {
     axiosInstance
       .get(`/task/getuserassign/${userId}`)
       .then((res) => setTasks(res.data.tasks || []))
-      .catch(() => setTasks([]));
+      .catch((err) => {
+        console.error(err);
+        toast.error("Failed to fetch tasks");
+        setTasks([]);
+      });
   }, [userId]);
 
   const getNextStatus = (status) => {
@@ -34,8 +35,8 @@ const ToDoTable = () => {
   const handleStatusClick = async (task) => {
     const nextStatus = getNextStatus(task.status);
     if (!nextStatus) return;
-    try {
 
+    try {
       await axiosInstance.put(`/task/updatestatus`, {
         taskId: task._id,
         status: nextStatus,
@@ -45,53 +46,56 @@ const ToDoTable = () => {
           t._id === task._id ? { ...t, status: nextStatus } : t
         )
       );
+      toast.success(`Task marked as ${nextStatus}`);
     } catch (error) {
       console.error("Failed to update status", error);
+      toast.error("Failed to update task status");
     }
   };
 
   const getStatusStyle = (status) => {
-    if (status === "Pending")
-      return "bg-amber-100 text-amber-700 border border-amber-300";
-    if (status === "In Progress")
-      return "bg-blue-100 text-blue-700 border border-blue-300";
-    if (status === "Completed")
-      return "bg-green-100 text-green-700 border border-green-300";
-    return "bg-gray-100 text-gray-700 border border-gray-300";
+    const styles = {
+      Pending: "bg-amber-100 text-amber-700 border border-amber-300",
+      "In Progress": "bg-blue-100 text-blue-700 border border-blue-300",
+      Completed: "bg-green-100 text-green-700 border border-green-300",
+    };
+    return styles[status] || "bg-gray-100 text-gray-700 border border-gray-300";
   };
 
-const handleUpload = async () => {
-  if (!file || !selectedTask) return;
+  const handleUpload = async () => {
+    if (!file || !selectedTask) {
+      toast.error("Please select a file first");
+      return;
+    }
 
-  const formData = new FormData();
-  formData.append("proofImage", file); 
+    const formData = new FormData();
+    formData.append("proofImage", file);
 
-  try {
-    setUploading(true);
+    try {
+      setUploading(true);
 
-    const res = await axiosInstance.put(
-      `/task/updateproofimage/${selectedTask._id}`,
+      const res = await axiosInstance.put(
+        `/task/updateproofimage/${selectedTask._id}`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
-          withCredentials: true, 
+          withCredentials: true,
         }
-    );
+      );
 
-    setTasks((prev) =>
-      prev.map((t) =>
-        t._id === selectedTask._id ? res.data : t
-      )
-    );
-    setSelectedTask(res.data); 
-    setFile(null);
-    toast.success("image Proof uploaded Successfully")
-  } catch (err) {
-    console.error("Upload failed:", err);
-  } finally {
-    setUploading(false);
-  }
-};
+      setTasks((prev) =>
+        prev.map((t) => (t._id === selectedTask._id ? res.data : t))
+      );
+      setSelectedTask(res.data);
+      setFile(null);
+      toast.success("Proof image uploaded successfully");
+    } catch (err) {
+      console.error("Upload failed:", err);
+      toast.error("Failed to upload proof image");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   return (
     <div className="p-6 bg-gray-200 rounded">
@@ -101,6 +105,7 @@ const handleUpload = async () => {
             <tr>
               <th className="px-6 py-3">Employee</th>
               <th className="px-6 py-3">Status</th>
+              <th className="px-6 py-3">Comments</th>
               <th className="px-6 py-3">Assigned By</th>
               <th className="px-6 py-3 text-center">Action</th>
             </tr>
@@ -117,7 +122,7 @@ const handleUpload = async () => {
                 {/* Employee */}
                 <td className="px-6 py-4 flex items-center gap-3">
                   <img
-                    src={task.assign?.image}
+                    src={task.assign?.image || "/default-avatar.png"}
                     alt="User"
                     className="w-12 h-12 rounded-full border-2 border-indigo-500 shadow-sm object-cover"
                   />
@@ -126,6 +131,7 @@ const handleUpload = async () => {
                   </span>
                 </td>
 
+                {/* Status */}
                 <td className="px-6 py-4">
                   <button
                     className={`${getStatusStyle(
@@ -138,10 +144,46 @@ const handleUpload = async () => {
                   </button>
                 </td>
 
+                {/* Comments */}
+                <td className="px-6 py-4">
+                  <div className="max-h-32 overflow-y-auto pr-2">
+                    {Array.isArray(task.comments) && task.comments.length > 0 ? (
+                      task.comments.map((comment, index) => (
+                        <div key={index} className="mb-2 last:mb-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <img
+                              src={
+                                comment?.commentedBy?.image ||
+                                "/default-avatar.png"
+                              }
+                              alt="User"
+                              className="w-6 h-6 rounded-full object-cover"
+                            />
+                            <span className="text-sm font-medium text-gray-800">
+                              {comment?.commentedBy
+                                ? `${comment.commentedBy.firstName} ${comment.commentedBy.lastName}`
+                                : "Unknown User"}
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-600">
+                            {comment?.text || "No text provided"}
+                          </p>
+                        </div>
+                      ))
+                    ) : (
+                      <span className="text-sm text-gray-500">
+                        No comments yet
+                      </span>
+                    )}
+                  </div>
+                </td>
+
+                {/* Assigned By */}
                 <td className="px-6 py-4 text-gray-600">
                   {task.createdBy?.firstName} {task.createdBy?.lastName}
                 </td>
 
+                {/* Action */}
                 <td className="px-6 py-4 text-center">
                   <button
                     onClick={() => {
@@ -174,7 +216,7 @@ const handleUpload = async () => {
               exit={{ scale: 0.9, opacity: 0 }}
               className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 relative"
             >
-              {/* Close button */}
+              {/* Close */}
               <button
                 onClick={() => setIsModalOpen(false)}
                 className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition"
@@ -182,15 +224,12 @@ const handleUpload = async () => {
                 <X size={20} />
               </button>
 
-              {/* Task Info */}
               <h3 className="text-2xl font-bold text-gray-800 mb-4">
                 {selectedTask.title}
               </h3>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                {selectedTask.description}
-              </p>
+              <p className="text-gray-600 mb-4">{selectedTask.description}</p>
 
-              {/* File Upload UI */}
+              {/* File Upload */}
               <div className="border rounded-lg p-4 bg-gray-50">
                 <label className="block mb-2 font-medium text-gray-700">
                   Upload Proof File
@@ -199,8 +238,8 @@ const handleUpload = async () => {
                   type="file"
                   onChange={(e) => setFile(e.target.files[0])}
                   className="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4
-                             file:rounded-full file:border-0 file:text-sm file:font-semibold
-                             file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                    file:rounded-full file:border-0 file:text-sm file:font-semibold
+                    file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
                 />
 
                 {file && file.type.startsWith("image/") && (
