@@ -75,7 +75,7 @@ const CreateModal = () => {
         onClick={() => setIsOpen(true)}
         className="px-5 py-2.5 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 shadow-md transition-all"
       >
-        + Add Employee
+        + Add
       </button>
 
       {isOpen && (

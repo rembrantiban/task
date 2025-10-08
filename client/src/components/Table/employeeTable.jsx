@@ -7,6 +7,7 @@ import { PrinterCheck, Search, Eye, X } from "lucide-react";
 import { useReactToPrint } from "react-to-print";
 import { PDFDownloadLink } from "@react-pdf/renderer";   
 import AssignedTasksPdf from "../Document/AssignedTasksPdf.jsx"; 
+import UpdateUserModal from "../../Modal/updateUserModal.jsx";
 
 
 const EmployeeTable = () => {
@@ -160,6 +161,7 @@ const EmployeeTable = () => {
                         setStaff((prev) => prev.filter((u) => u._id !== id))
                       }
                     />
+                    <UpdateUserModal />
                   </td>
                 </tr>
               ))

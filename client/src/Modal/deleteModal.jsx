@@ -1,6 +1,7 @@
 import { Button, Modal, ModalBody, ModalHeader } from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useState } from "react";
+import { Trash  } from "lucide-react";
 
 import axiosInstance from "../lib/axios";
 import { toast } from 'react-hot-toast'
@@ -9,6 +10,7 @@ import { toast } from 'react-hot-toast'
 const DeleteModal = ({ userId, onDeleteSuccess }) => {
   const [openModal, setOpenModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+
 
   const handleDelete = async () => {
     try {
@@ -33,7 +35,8 @@ const DeleteModal = ({ userId, onDeleteSuccess }) => {
 
   return (
     <>
-      <Button color="red" onClick={() => setOpenModal(true)} size="xs">
+      <Button className="h-10" color="red" onClick={() => setOpenModal(true)} size="xs">
+        <Trash className="mr-2 h-4 w-4" />
         Delete
       </Button>
 
