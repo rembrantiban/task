@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Upload } from "lucide-react";
+import { X, Upload, Edit } from "lucide-react";
 
 const UpdateUserModal = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,7 +38,8 @@ const UpdateUserModal = () => {
         onClick={() => setIsOpen(true)}
         className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-xl shadow-md hover:opacity-90 transition-all"
       >
-        Update User
+        <Edit size={18} className="inline-block mr-2" />
+        Update
       </button>
 
       <AnimatePresence>

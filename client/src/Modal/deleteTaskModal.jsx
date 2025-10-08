@@ -1,5 +1,6 @@
 import { Modal, ModalBody, ModalHeader, Button } from "flowbite-react";
 import { useState } from "react";
+import { Trash2 } from "lucide-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { toast } from 'react-hot-toast';
 
@@ -29,7 +30,7 @@ const DeleteModal = ({ taskId, onDeleteSuccess }) => {
 
   return (
     <>
-      <button className="btn btn-warning" onClick={() => setOpenModal(true)}>Delete</button>
+      <button className="bg-red-700 w-20 h-8 text-white flex justify-center items-center rounded " onClick={() => setOpenModal(true)}><Trash2 size={18} /> Delete</button>
       <Modal show={openModal} size="md" onClose={() => setOpenModal(false)} popup>
         <ModalHeader />
         <ModalBody>

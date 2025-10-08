@@ -3,7 +3,7 @@ import Profile from "../../assets/profile.jpg";
 import axiosInstance from "../../lib/axios.js";
 import { Link } from "react-router-dom";
 import { FaClockRotateLeft, FaClock } from "react-icons/fa6";
-import { CheckCircle2, Loader2, X } from "lucide-react"; 
+import { CheckCircle2, Loader2, X, Pencil  } from "lucide-react"; 
 import DeleteModal from "../../Modal/deleteTaskModal.jsx";
 import ExportTasksPreview from "../Document/ExportTasksPreview.jsx";
 import toast from "react-hot-toast";
@@ -220,8 +220,9 @@ const ViewTable = () => {
                       <Link
                         to={`/updatetask/${task._id}`}
                         state={{ title: task.title, description: task.description, assign: task.assign?._id }}
-                        className="px-3 py-1 rounded-lg text-sm bg-blue-500 text-white hover:bg-blue-600 transition"
+                        className="px-3 py-1 w-20 flex justify-center items-center   rounded-sm text-sm bg-blue-500 text-white hover:bg-blue-600 transition"
                       >
+                        <Pencil size={15} />
                         Edit
                       </Link>
                       <DeleteModal
