@@ -75,7 +75,7 @@ const EmployeeTable = () => {
           </div>
 
           <PDFDownloadLink
-            document={<AssignedTasksPdf tasks={filteredStaff} />} // ✅ Pass filtered staff here
+            document={<AssignedTasksPdf tasks={filteredStaff} />} 
             fileName="staff-list.pdf"
           >
             {({ loading }) => (
@@ -161,7 +161,14 @@ const EmployeeTable = () => {
                         setStaff((prev) => prev.filter((u) => u._id !== id))
                       }
                     />
-                    <UpdateUserModal />
+                   <UpdateUserModal 
+                      userId={user._id} 
+                      onUpdateSuccess={(updatedUser) => {
+                        setStaff((prev) =>
+                          prev.map((u) => (u._id === updatedUser._id ? updatedUser : u))
+                        );
+                      }} 
+                    />
                   </td>
                 </tr>
               ))

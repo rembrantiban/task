@@ -84,14 +84,16 @@ const ViewTable = () => {
     
     setSavingComment(taskId);
 
-    const res = await axiosInstance.put(
+      await axiosInstance.put(
       `/task/addcomment/${taskId}`,
       { comment },
       { withCredentials: true }
     );
     
     setStaff((prev) =>
-      prev.map((t) => (t._id === taskId ? res.data : t))
+      prev.map((t) =>
+        t._id === taskId ? { ...t, comment: "" } : t
+      )
     );
 
     toast.success("Comment saved successfully");
@@ -186,16 +188,14 @@ const ViewTable = () => {
                   <td className="px-6 py-4">
                     <div className="flex flex-col gap-2">
                       <textarea
-                        defaultValue={task.comment || ""}
-                        onChange={(e) =>
-                          setStaff((prev) =>
-                            prev.map((t) =>
-                              t._id === task._id
-                                ? { ...t, comment: e.target.value }
-                                : t
+                         value={task.comment || ""}
+                          onChange={(e) =>
+                            setStaff((prev) =>
+                              prev.map((t) =>
+                                t._id === task._id ? { ...t, comment: e.target.value } : t
+                              )
                             )
-                          )
-                        }
+                          }
                         className="w-full p-2 border rounded-md text-sm focus:ring-2 focus:ring-blue-500"
                         placeholder="Add comment..."
                         rows={2}

@@ -222,7 +222,7 @@ export const addCommentToTask = async (req, res ) => {
              { new: true },
         )
         .populate('comments.commentedBy', 'firstName lastName email role image')
-        .populate('assign', 'firstName lastName email role image')
+        .populate('assign', 'firstName lastName email role image proofUrl')
         .populate('createdBy', 'firstName lastName email role image');
 
         res.status(200).json({

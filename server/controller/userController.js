@@ -115,60 +115,63 @@ export const loginUser = async (req, res) => {
   }
 };
 
-// ================= UPDATE USER =================
+
 export const updateUser = async (req, res) => {
   try {
     const userId = req.params.id;
 
-    // ✅ ensure only owner or admin can update
+    if (!req.user) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+
     if (req.user.id !== userId && req.user.role !== "Admin") {
-      return res.status(403).json({ success: false, message: "Unauthorized" });
+      return res.status(403).json({ success: false, message: "Forbidden" });
     }
 
     const user = await userModel.findById(userId);
-    if (!user)
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
 
     const { firstName, lastName, phone, email, password } = req.body;
     const updateData = {};
 
-    if (firstName) updateData.firstName = firstName;
-    if (lastName) updateData.lastName = lastName;
-    if (phone) updateData.phone = phone;
+    if (firstName?.trim()) updateData.firstName = firstName.trim();
+    if (lastName?.trim()) updateData.lastName = lastName.trim();
+    if (phone?.trim()) updateData.phone = phone.trim();
 
-    // email update validation
-    if (email && email !== user.email) {
-      const existing = await userModel.findOne({ email });
-      if (existing && existing._id.toString() !== userId)
-        return res
-          .status(400)
-          .json({ success: false, message: "Email already used by another user" });
-      updateData.email = email;
+   if (email?.trim()) {
+      const trimmedEmail = email.trim();
+      if (trimmedEmail !== user.email) {
+        const existing = await userModel.findOne({ email: trimmedEmail });
+        if (existing && existing._id.toString() !== userId) {
+          return res
+            .status(400)
+            .json({ success: false, message: "Email already in use" });
+        }
+        updateData.email = trimmedEmail;
+      }
     }
 
-    if (password && password.trim() !== "")
-      updateData.password = await bcrypt.hash(password, 10);
 
-    // ✅ handle cloudinary upload
+    if (password && password.trim()) {
+      updateData.password = await bcrypt.hash(password, 10);
+    }
+
     if (req.file) {
-      const result = await new Promise((resolve, reject) => {
+      const uploadResult = await new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
           { folder: "User" },
           (error, result) => (error ? reject(error) : resolve(result))
         );
         stream.end(req.file.buffer);
       });
-      updateData.image = result.secure_url;
+      updateData.image = uploadResult.secure_url;
     }
 
-    const updatedUser = await userModel.findByIdAndUpdate(
-      userId,
-      { $set: updateData },
-      { new: true }
-    );
-
+    const updatedUser = await userModel
+      .findByIdAndUpdate(userId, { $set: updateData }, { new: true })
+      .select("-password"); 
     return res.status(200).json({
       success: true,
       message: "User updated successfully",
@@ -181,6 +184,7 @@ export const updateUser = async (req, res) => {
       .json({ success: false, message: "Internal server error" });
   }
 };
+
  
 export const deleteUser = async (req, res) => { 
   try { 
