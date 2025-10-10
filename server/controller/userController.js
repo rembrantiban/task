@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import cloudinary from "../config/cloudinary.js";
 import 'dotenv/config'
+import { findSourceMap } from "module";
 
 export const registerUser = async (req, res) => {
   const { firstName, lastName, phone, email, password, role } = req.body;
@@ -298,6 +299,55 @@ export const getTotalStaff = async (req, res) => {
       .json({ success: false, message: "Internal server error" });
   }
 };
+
+
+export const UpdateUser = async (req, res) => {
+     try{ 
+        const { id } = req.params;
+        const { firstName, lastName, phone, email, password, role } = req.body;
+
+        const User = await userModel.findById(id);
+        if(!User){
+            return res.status(404).json({ success: false, message: "User not found"});
+        }
+
+        if(password){
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(password, salt);
+            User.password = hashedPassword
+        }
+
+        if (req.file) {
+          const result = await new Promise((resolve, reject) => {
+            const stream = cloudinary.uploader.upload_stream(
+              { folder: "user_profiles" },
+              (error, result) => {
+                if (error) reject(error);
+                else resolve(result);
+              }
+            );
+            stream.end(req.file.buffer);
+          });
+
+          User.image = result.secure_url;
+    }
+
+        User.firstName = firstName || User.firstName;
+        User.lastName = lastName || User.lastName;
+        User.phone = phone || User.phone;
+        User.email = email || User.email;
+        User.role = role || User.role;
+
+        await User.save();
+
+        return res.status(200).json
+        ({ success: true, message: "User updated successfully", user: User });
+     }
+     catch(error){
+        console.error("Error while updating User", error);
+        return res.status(500).json({ success: false, message: "Internal server error", error: error.message });
+     }
+}
  
 
 export default {
@@ -311,4 +361,5 @@ export default {
      getAllStaff,
      getUserProfile,
      getTotalStaff,
+     UpdateUser, 
 }

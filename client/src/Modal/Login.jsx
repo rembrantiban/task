@@ -11,6 +11,7 @@ import {
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axiosInstance from "../lib/axios";
+import { LogIn } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { User } from "lucide-react";
 
@@ -140,7 +141,7 @@ export function Login() {
 
             <Button 
               type="submit" 
-              className="bg-orange-950 hover:bg-orange-900  hover:opacity-90 w-full shadow-md rounded-lg transition" 
+              className="bg-orange-950 hover:bg-orange-900 gap-2  hover:opacity-90 w-full shadow-md rounded-lg transition" 
               disabled={disableButton || loading}
             >
               {loading ? (
@@ -149,7 +150,10 @@ export function Login() {
                   Logging in...
                 </>
               ) : (
-                "Log in"
+                <>
+                   <LogIn size="20" />
+                    Log in
+                </>
               )}
             </Button>
 

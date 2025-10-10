@@ -26,7 +26,8 @@
     "react-router-dom": "^7.6.3",
     "react-to-print": "^2.14.15",
     "recharts": "^2.10.3",
-    "tailwindcss": "^4.1.11"
+    "tailwindcss": "^4.1.11",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",

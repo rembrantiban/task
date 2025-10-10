@@ -236,6 +236,29 @@ export const addCommentToTask = async (req, res ) => {
         res.status(500).json({ success: false, message: "Internal server error"});
     }
 }
+
+export const getUserWeeklyCompletedTasks = async (req, res) => {
+  try {
+    const userId = req.user._id; 
+    const startOfWeek = new Date();
+    startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+    startOfWeek.setHours(0, 0, 0, 0);
+
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(endOfWeek.getDate() + 7);
+
+    const weeklyCompletedTasks = await taskModel.countDocuments({
+      assign: userId,
+      status: "Completed",
+      updatedAt: { $gte: startOfWeek, $lt: endOfWeek },
+    });
+
+    res.status(200).json({ weeklyCompletedTasks });
+  } catch (error) {
+    console.error("Error fetching weekly completed tasks:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
  
 
 export default{
@@ -248,4 +271,5 @@ export default{
   getTotalTask,
   updateProofUrl,
   addCommentToTask,
+  getUserWeeklyCompletedTasks,
 };

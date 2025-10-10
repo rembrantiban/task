@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, UploadCloud } from "lucide-react";
+import { X, UploadCloud, Edit } from "lucide-react";
 import axiosInstance from "../lib/axios.js";
 import toast from "react-hot-toast";
 
@@ -69,6 +69,7 @@ const UpdateUserModal = ({ userId, onUpdateSuccess }) => {
         onClick={handleOpen}
         className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 hover:opacity-90 text-white text-xs font-semibold shadow-md"
       >
+        <Edit className="w-4 h-4 inline-block mr-1" />
         Edit
       </button>
 

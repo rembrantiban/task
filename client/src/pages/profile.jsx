@@ -4,7 +4,7 @@ import { MdErrorOutline } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { Button, Label, TextInput, FileInput, Spinner } from "flowbite-react";
 import { toast } from "react-hot-toast";
-import { Camera, Eye, EyeOff } from "lucide-react";
+import { Camera, Eye, EyeOff, ContactRound } from "lucide-react";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -91,7 +91,12 @@ const Profile = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-gray-900">
-      <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg w-full max-w-lg">
+        <div className="absolute top-0 left-0 hue-rotate-20 h-40 w-full bg-gradient-to-r from-gray-700 to-gray-900 text-white shadow-lg py-4 px-6 flex  justify-center gap-2 cursor-pointer hover:opacity-90 transition">
+              <ContactRound size={30} className="text-white" />
+              <h1 className="text-2xl font-bold tracking-wide">Profile</h1>
+            </div>
+
+      <div className="bg-white z-1 dark:bg-gray-800 p-8 rounded-2xl shadow-lg w-full max-w-lg">
         {message && (
           <p className="flex items-center gap-2 text-sm mb-4 bg-red-100 border border-red-500 rounded-lg p-2 text-red-600">
             <MdErrorOutline className="text-lg" /> {message}
@@ -102,7 +107,7 @@ const Profile = () => {
           Update Profile
         </h1>
 
-\        <div className="flex flex-col items-center relative mb-4">
+        <div className="flex flex-col items-center relative mb-4">
           <img
             src={preview}
             alt="User"

@@ -8,6 +8,7 @@ import { registerUser,
         getAllStaff,
         getUserProfile,
         getTotalStaff,
+        UpdateUser,
 
  } from "../controller/userController.js";
 import upload from "../middleware/multer.js";
@@ -26,5 +27,6 @@ Authrouter.get('/getallusers', requireAuth, getAllUsers);
 Authrouter.get('/getallstaff', requireAuth, getAllStaff);
 Authrouter.get('/profile/:id', requireAuth, getUserProfile);
 Authrouter.get('/totalstaff', requireAuth, getTotalStaff);
+Authrouter.put('/updateuser/:id', requireAuth, UpdateUser);
 
 export default Authrouter;

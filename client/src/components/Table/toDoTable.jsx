@@ -99,9 +99,18 @@ const ToDoTable = () => {
 
   return (
     <div className="p-6 bg-gray-200 rounded">
-      <div className="overflow-hidden rounded-2xl shadow-xl bg-white">
+      <div className="overflow-y-auto rounded-2xl shadow-xl bg-white">
+        <div className="flex from-gray-200 to-gray-300 rounded p-5 md:flex-row justify-between items-center gap-4">
+         <div>
+           <h2 className="text-xl font-semibold text-gray-800 dark:text-white">🗓️ My To-Do List</h2>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">
+            Here are your assigned tasks. You can update their status, upload proof of completion, or view details for each one.
+          </p>
+         </div>
+          </div>
+
         <table className="w-full text-sm text-left">
-          <thead className="bg-gradient-to-r from-gray-900 to-gray-950 text-white text-sm uppercase tracking-wide">
+          <thead className="bg-gradient-to-r from-gray-200 to-gray-300 text-black text-sm uppercase tracking-wide">
             <tr>
               <th className="px-6 py-3">Employee</th>
               <th className="px-6 py-3">Status</th>

@@ -7,6 +7,7 @@ import { FaClock } from "react-icons/fa";
 import { PiClockCountdownFill } from "react-icons/pi";
 import { GrCompliance } from "react-icons/gr";
 import Analytics from "../components/staffAnalytics/Analytics.jsx";
+import WeeklyAnalytics from "../components/staffAnalytics/weeklyAnalytics.jsx";
 
 const StaffDashboard = () => {
   const [PendingTasks, setPendingTasks] = useState("0");
@@ -83,7 +84,7 @@ const StaffDashboard = () => {
 
       <main className="max-w-7xl mx-auto py-10 px-4 lg:px-8">
         <motion.div
-          className="grid gap-6 sm:grid-cols-3 mb-10"
+          className="grid gap-1 sm:grid-cols-3 mb-5"
           initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
@@ -109,14 +110,44 @@ const StaffDashboard = () => {
         </motion.div>
 
         <motion.div
-          className="bg-white dark:bg-gray-900 shadow-lg rounded-2xl p-6 border border-gray-200 dark:border-gray-800 hover:shadow-xl transition-all duration-300"
+          className="bg-white dark:bg-gray-900 shadow-lg rounded-2xl p-6 border border-gray-200 dark:border-gray-800 
+             hover:shadow-xl transition-all duration-300"
           initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
         >
-          <h2 className="text-xl font-semibold mb-4">Task Analytics</h2>
-          <Analytics />
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
+            <div>
+              <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 dark:text-gray-100">
+                Task Analytics
+              </h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Get an overview of your task progress — track how many tasks are pending, in progress, 
+                or completed in real-time.
+              </p>
+            </div>
+
+            <span className="mt-3 sm:mt-0 px-3 py-1 text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 rounded-full">
+              Updated live
+            </span>
+          </div>
+             <div className="p-6 space-y-6">
+      {/* Other dashboard cards */}
+      <WeeklyAnalytics />
+      <Analytics />
+    </div>
+         
+            
+         
+          <div className="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4 flex justify-between text-sm text-gray-600 dark:text-gray-400">
+            <p>
+              <span className="font-semibold text-gray-800 dark:text-gray-200">Total Tasks:</span>{" "}
+              Automatically fetched from your activity.
+            </p>
+            <p className="italic text-gray-500 dark:text-gray-400">Last updated a few seconds ago</p>
+          </div>
         </motion.div>
+
       </main>
     </div>
   );
